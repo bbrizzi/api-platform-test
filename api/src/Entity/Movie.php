@@ -17,18 +17,12 @@ class Movie
      * @ApiProperty(identifier=true)
      */
     private $id;
-    // Title
-    // Link to the poster image
-    // Year of release
-    // Rating value and count
-    // XXXXXXXXXXXX
-    // Do manually OR :
-    // `php bin/console make:entity`
-    // XXXXXXXXXXXXX
+
     private $title;
-    private $poster_image;
-    private $rating_value;
-    private $rating_count;
+    private $imdb_id;
+    private $poster_path;
+    private $vote_average;
+    private $vote_count;
     private $release_year;
 
     public function getId(): ?int
@@ -36,7 +30,7 @@ class Movie
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function setId($id): self
     {
         $this->id = $id;
 
@@ -48,34 +42,71 @@ class Movie
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle($title): self
     {
         $this->title = $title;
 
         return $this;
     }
 
-    public function getDirector(): ?string
+    public function getImdbId(): ?string
     {
-        return $this->director;
+        return $this->imdb_id;
     }
 
-    public function setDirector(?string $director): self
+    public function setImdbId($imdb_id): self
     {
-        $this->director = $director;
+        $this->imdb_id = $imdb_id;
 
         return $this;
     }
 
-    public function getYear(): ?int
+    public function getPosterPath(): ?string
     {
-        return $this->year;
+        return $this->poster_path;
     }
 
-    public function setYear(?int $year): self
+    public function setPosterPath($poster_path): self
     {
-        $this->year = $year;
+        $this->poster_path = $poster_path;
 
         return $this;
     }
+
+    public function getVoteAverage(): ?string
+    {
+        return $this->vote_average;
+    }
+
+    public function setVoteAverage($vote_average): self
+    {
+        $this->vote_average = $vote_average;
+
+        return $this;
+    }
+
+    public function getVoteCount(): ?int
+    {
+        return $this->vote_count;
+    }
+
+    public function setVoteCount($vote_count): self
+    {
+        $this->vote_count = $vote_count;
+
+        return $this;
+    }
+
+    public function getReleaseYear(): ?string
+    {
+        return $this->release_year;
+    }
+
+    public function setReleaseYear($release_year): self
+    {
+        $this->release_year = $release_year;
+
+        return $this;
+    }
+
 }

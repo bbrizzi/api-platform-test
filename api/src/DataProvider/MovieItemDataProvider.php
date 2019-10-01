@@ -7,8 +7,7 @@ use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Movie;
 use GuzzleHttp;
 
-final class MovieItemDataProvider //extends MoviedbApiElementItemDataProvider
-	implements ItemDataProviderInterface, RestrictedDataProviderInterface
+final class MovieItemDataProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
 
 	private $apiKey;
@@ -16,8 +15,7 @@ final class MovieItemDataProvider //extends MoviedbApiElementItemDataProvider
 	function __construct($apiKey)
 	{
 		$this->apiKey = $apiKey;
-		$this->request_url = 'https://api.themoviedb.org/3/movie/550?api_key=' . $this->apiKey;
-		$this->image_prefix = 'https://image.tmdb.org/t/p/original/';
+		$this->request_url_root = 'https://api.themoviedb.org/3/movie/';
 		$this->client = new GuzzleHttp\Client();
 	}
 
@@ -28,16 +26,25 @@ final class MovieItemDataProvider //extends MoviedbApiElementItemDataProvider
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Movie
     {
-    	$res = $this->client->request('GET', $this->request_url);
-    	// TODO : composer require symfony/serializer
-    	// TODO : https://symfony.com/doc/current/components/serializer.html
+        $request_url = $this->request_url_root . $id . '?api_key=' . $this->apiKey;
+        $response = $this->client->request('GET', $request_url);
 
-    	$movie = new Movie();
-    	$movie->setId(1);
-    	$movie->setDirector("This body : " . $res->getBody());
-    	$movie->setYear('1990');
-    	$movie->setTitle('Toto');
-        // Retrieve the movie item from somewhere then return it or null if not found
+        if($response->getStatusCode() !== 200){
+            return null;
+        }
+
+        $api_response_json = $response->getBody();
+        $api_response_object = json_decode($api_response_json);
+
+        $movie = new Movie();
+        $movie->setId( $id );
+        $movie->setTitle( $api_response_object->title );
+        $movie->setImdbId( $api_response_object->imdb_id );
+        $movie->setPosterPath( $api_response_object->poster_path );
+        $movie->setVoteAverage( $api_response_object->vote_average );
+        $movie->setVoteCount( (int) $api_response_object->vote_count );
+        $movie->setReleaseYear( (int) substr($api_response_object->release_date,0,4) );
+
         return $movie;
     }
 }
