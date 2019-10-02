@@ -43,3 +43,4 @@ Possible Evolutions
 - Creating mock data for use in unit tests
 - Writing additional unit tests
 - Remove the Doctrine dependency as it is not used by the project. This may require to redefine the Movie class as a POPO.
+- Remove the Admin as it is not used either
